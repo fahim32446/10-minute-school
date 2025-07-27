@@ -1,3 +1,4 @@
+import { json } from 'stream/consumers';
 import { baseURL } from './request';
 
 interface FetchOptions extends RequestInit {

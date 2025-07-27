@@ -215,7 +215,25 @@ export type CourseData = {
   start_at: string;
   media: MediaItem[];
   checklist: ChecklistItem[];
-  seo: unknown[];
+  seo: {
+    defaultMeta: MetaTag[];
+    description: string;
+    keywords: string[];
+    schema: SchemaEntry[];
+    title: string;
+  };
   cta_text: CTA;
   sections: Section[];
+};
+
+export type MetaTag = {
+  content: string;
+  type: 'name' | 'property';
+  value: string;
+};
+
+export type SchemaEntry = {
+  meta_name: 'ld-json';
+  meta_value: string;
+  type: 'ld-json';
 };

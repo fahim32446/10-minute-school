@@ -14,12 +14,32 @@ import ProductSidebar from '@/components/page-components/product/product-sidebar
 import { fetchRequest } from '@/lib/fetchApis';
 import { CourseResponse } from '@/type/product.interface';
 import { Metadata } from 'next';
+import Head from 'next/head';
 
-export const metadata: Metadata = {
-  title: 'Complete IELTS Course in Bangladesh - Munzereen Shahid [2025]',
-  description:
-    'IELTS-এর সেরা প্রস্তুতি নিতে আজই জয়েন করুন Complete IELTS Course-টিতে, যেখানে থাকছে দেশসেরা IELTS ইন্সট্রাক্টরের গাইডলাইন, Mock Test ও প্রিমিয়াম ...',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const result = await fetchRequest<CourseResponse>(
+    `discovery-service/api/v1/products/ielts-course`
+  );
+
+  const data = result?.data.seo;
+
+  const title = data.title || 'IELTS Course';
+  const description = data.description || '';
+  const ogImage = data?.defaultMeta?.find((meta) => meta.value === 'og:image')?.content;
+  const ogUrl = data?.defaultMeta?.find((meta) => meta.value === 'og:url')?.content;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: ogImage ? [{ url: ogImage }] : [],
+      url: ogUrl,
+    },
+    keywords: data?.keywords || [],
+  };
+}
 
 const page = async () => {
   const result = await fetchRequest<CourseResponse>(
@@ -28,8 +48,23 @@ const page = async () => {
 
   const data = result?.data;
 
+  const seo = result?.data.seo;
+  const schemas =
+    seo?.schema?.filter((s) => s.type === 'ld-json' && s.meta_value)?.map((s) => s.meta_value) ||
+    [];
+
   return (
     <div>
+      <Head>
+        {schemas?.map((schema, index) => (
+          <script
+            key={index}
+            type='application/ld+json'
+            dangerouslySetInnerHTML={{ __html: schema }}
+          />
+        ))}
+      </Head>
+
       <ProductPageHero
         title={data.title}
         description={data.description}
