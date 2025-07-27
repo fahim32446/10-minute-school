@@ -14,7 +14,6 @@ import ProductSidebar from '@/components/page-components/product/product-sidebar
 import { fetchRequest } from '@/lib/fetchApis';
 import { CourseResponse } from '@/type/product.interface';
 import { Metadata } from 'next';
-import Head from 'next/head';
 
 export async function generateMetadata(): Promise<Metadata> {
   const result = await fetchRequest<CourseResponse>(
@@ -55,15 +54,13 @@ const page = async () => {
 
   return (
     <div>
-      <Head>
-        {schemas?.map((schema, index) => (
-          <script
-            key={index}
-            type='application/ld+json'
-            dangerouslySetInnerHTML={{ __html: schema }}
-          />
-        ))}
-      </Head>
+      {schemas?.map((schema, index) => (
+        <script
+          key={index}
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: schema }}
+        />
+      ))}
 
       <ProductPageHero
         title={data.title}

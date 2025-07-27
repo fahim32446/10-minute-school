@@ -35,7 +35,7 @@ const ProductPageHero = ({ title, description, media, checklist }: Props) => {
 
           <div
             dangerouslySetInnerHTML={{ __html: description }}
-            className='text-gray-400 font-bangla hidden md:block text-sm'
+            className='text-gray-400 font-bangla hidden md:block'
           />
         </div>
 
